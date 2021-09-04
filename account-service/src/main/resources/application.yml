@@ -1,0 +1,39 @@
+server:
+  port: ${port:9200}
+spring:
+  devtools:
+    restart:
+      enabled: true
+  datasource:
+    # Connection url for the database "fintech"
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:localhost}:3306/fintech?createDatabaseIfNotExist=true&userSSL=false&serverTimezone=UTC}
+    # Username and secret
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:1007}
+    initialization-mode: always
+    dbcp2:
+      # Keep the connection alive if idle for a long time (needed in production)
+      test-while-idle: true
+      validation-query: SELECT 1
+  application:
+    name: account-service
+  jpa:
+    # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
+    # stripped before adding them to the entity manager).
+
+    # Show or not log for each sql query for debugging purposes. NB make sure to turn this off in production to avoid leaking some information
+    hibernate:
+      # Hibernate ddl auto (create, create-drop, update): with "update" the database
+      # schema will be automatically updated accordingly to java entities found in
+      # the project
+      ddl-auto: update
+    show-sql: true
+
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      default-zone:http: http://localhost:8761/eureka
