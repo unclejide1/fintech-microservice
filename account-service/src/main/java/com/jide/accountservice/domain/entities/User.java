@@ -1,5 +1,6 @@
 package com.jide.accountservice.domain.entities;
 
+import com.jide.accountservice.domain.enums.AccountOpeningStageConstant;
 import com.jide.accountservice.domain.enums.GenderTypeConstant;
 import lombok.*;
 
@@ -37,6 +38,9 @@ public class User extends AbstractBaseEntity<Long> {
 
     @Enumerated(EnumType.STRING)
     private GenderTypeConstant gender;
+
+    @Enumerated(EnumType.STRING)
+    private AccountOpeningStageConstant status;
 
 
     @NotBlank(message = "password is required")
