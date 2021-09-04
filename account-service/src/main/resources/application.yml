@@ -37,3 +37,10 @@ eureka:
   client:
     service-url:
       default-zone:http: http://localhost:8761/eureka
+
+secured:
+  app:
+    jwtSecret: SecuredSecretKeyabracadabrajide
+    jwtExpirationMs: 86400000
+gateway:
+  ip: 192.168.1.11
