@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,16 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MyUserDetailsService myUserDetailsService;
     private PasswordEncoder passwordEncoder;
     private JwtAuthenticationEntryPoint authenticationHandler;
-
-    @Value("${gateway.ip}")
-    private String gatewayIp;
+    private Environment environment;
 
     @Autowired
     public SecurityConfig(MyUserDetailsService myUserDetailsService, PasswordEncoder passwordEncoder,
-                          JwtAuthenticationEntryPoint authenticationHandler) {
+                          JwtAuthenticationEntryPoint authenticationHandler, Environment environment) {
         this.myUserDetailsService = myUserDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationHandler = authenticationHandler;
+        this.environment = environment;
     }
 
     @Bean
@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/v2/api-docs", "/webjars/**").permitAll()
 //                .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/**").hasIpAddress(gatewayIp)
+                .antMatchers("/**").hasIpAddress(environment.getProperty("gateway.ip"))
                 .antMatchers("/api/v1/test/**").permitAll()
                 .anyRequest().authenticated();
 

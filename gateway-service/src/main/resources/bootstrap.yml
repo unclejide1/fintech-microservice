@@ -2,4 +2,4 @@ spring:
   cloud:
     config:
       uri: http://localhost:9600
-      name: config-server
+      name: gateway-service
