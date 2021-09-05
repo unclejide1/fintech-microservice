@@ -9,40 +9,10 @@ spring:
     username: guest
     password: freedom
 
-#  cloud:
-#    gateway:
-#      discovery:
-#        locator:
-#          enabled: true
-#          lower-case-service-id: true
-#      routes:
-#        - id: account-status-check
-#          uri: lb://account-service
-#          predicates:
-#            - Path= /api/v1/auth/users
-#            - Method= GET
-#            - Header=Authorization, Bearer (.*)
-#          filters:
-#            - RemoveRequestHeader=Cookie
-#            - RewritePath=/users-ws/(?<segment>.*), /$\{segment}
-#            - AuthorizationHeaderFilter
-
-#eureka:
-#  instance:
-#    prefer-ip-address: true
-#  client:
-#    service-url:
-#      default-zone:http: http://localhost:8761/eureka
 
 
 
-#secured:
-#  app:
-#    uri: /accounts/api/v1/auth/**
-#    header: Authorization
-#    prefix: Bearer
-#    jwtSecret: SecuredSecretKeyabracadabrajide
-#    jwtExpirationMs: 86400000
+
 
 
 
@@ -52,34 +22,25 @@ zuul:
     account-service:
       path: /accounts/**
       service-id: account-service
-#      strip-prefix: false
-#      sensitive-headers: Cookie,Set-Cookie
-#  prefix: /api
+
   ignored-services: '*'
 
-#      # A prefix that can added to beginning of all requests.
-#      #zuul.prefix=/api
-#
-#      # Disable accessing services using service name (i.e. gallery-service).
-#      # They should be only accessed through the path defined below.
-#      zuul.ignored-services=*
-#
-#      # Map paths to services
-#      zuul.routes.gallery-service.path=/gallery/**
-#      zuul.routes.gallery-service.service-id=gallery-service
-#      # Map path to auth service
-#      zuul.routes.auth-service.path=/auth/**
-#      zuul.routes.auth-service.service-id=AUTH-SERVICE
-#
-#      # By default, all requests to gallery service for example will start with: "/gallery/"
-#      # What will be sent to the gallery service is what comes after the path defined,
-#      # So, if request is "/gallery/view/1", gallery service will get "/view/1".
-#      # In case of auth, we need to pass the "/auth/" in the path to auth service. So, set strip-prefix to false
-#      zuul.routes.auth-service.strip-prefix=false
-#
-#      # Exclude authorization from sensitive headers
-#      zuul.routes.auth-service.sensitive-headers=Cookie,Set-Cookie
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans,health,routes,httptrace
 
+
+api:
+  account:
+    actuator:
+      url:
+        path: /accounts/actuator/*
+  zuul:
+    actuator:
+      url:
+        path: /actuator/*
 
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:
@@ -89,8 +50,3 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 60000
-#  cloud:
-#    config:
-#      discovery:
-#        enabled: true
-#        service-id: ms-config-server

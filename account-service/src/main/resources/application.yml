@@ -11,7 +11,11 @@ spring:
       enabled: true
   application:
     name: account-service
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings,health
 
 
 
