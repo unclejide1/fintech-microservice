@@ -3,19 +3,19 @@ package com.jide.gatewayservice.security;
 import org.springframework.beans.factory.annotation.Value;
 
 public class JwtConfig {
-    @Value("${security.jwt.uri:accounts/api/v1/auth/**}")
+    @Value("${secured.app.uri:accounts/api/v1/auth/**}")
     private String Uri;
 
-    @Value("${security.jwt.header:Authorization}")
+    @Value("${secured.app.header:Authorization}")
     private String header;
 
-    @Value("${security.jwt.prefix:Bearer }")
+    @Value("${secured.app.prefix:Bearer }")
     private String prefix;
 
-    @Value("${security.jwt.expiration}")
+    @Value("${secured.app.jwtExpirationMs}")
     private int expiration;
 
-    @Value("${security.jwt.secret}")
+    @Value("${secured.app.jwtSecret}")
     private String secret;
 
     public String getUri() {

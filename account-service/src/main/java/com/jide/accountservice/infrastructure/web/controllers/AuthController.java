@@ -11,6 +11,8 @@ import com.jide.accountservice.usecases.model.CreateUserJSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,12 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "api/v1/auth")
 public class AuthController {
+
+    @Value("${secured.app.jwtSecret}")
+    private String jwtSecret;
+
+    @Autowired
+    private Environment env;
 
     private final SignUpUseCase signUpUseCase;
     private final LoginUseCase loginUseCase;
@@ -82,7 +90,7 @@ public class AuthController {
 //       String trackingReference = sequenceEntityDao.getNextAccountId();
 //       String trackingReference2 = sequenceEntityDao.getNextTransactionReference();
        String trackingReference = "tetrttrtrttr";
-       String trackingReference2 = "yyytytyyt";
+       String trackingReference2 = env.getProperty("secured.app.jwtSecret");
        ApiResponse<String> apiResponse = new ApiResponse<>(HttpStatus.OK);
         apiResponse.setData(trackingReference);
         apiResponse.setMessage(trackingReference2);
