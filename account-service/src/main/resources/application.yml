@@ -1,6 +1,10 @@
 server:
   port: ${port:9200}
 spring:
+  cloud:
+    config:
+      uri: http://localhost:9600
+      name: config-server
   devtools:
     restart:
       enabled: true
@@ -38,9 +42,6 @@ eureka:
     service-url:
       default-zone:http: http://localhost:8761/eureka
 
-secured:
-  app:
-    jwtSecret: SecuredSecretKeyabracadabrajide
-    jwtExpirationMs: 86400000
+
 gateway:
   ip: 192.168.1.11
