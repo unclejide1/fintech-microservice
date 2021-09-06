@@ -14,10 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UpdateUserDetailsRequest {
     private Long id;
-    private String username;
     private String firstName;
     private String lastName;
-    private String middleName;
     private LocalDate dateOfBirth;
     private String phoneNumber;
     private String gender;

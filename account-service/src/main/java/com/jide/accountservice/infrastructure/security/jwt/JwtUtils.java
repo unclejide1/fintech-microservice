@@ -21,6 +21,9 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
 
+    @Value("${secured.app.jwtExpirationMs}")
+    private int jwtExpirationMs;
+
     @Autowired
     private Environment env;
 
@@ -31,7 +34,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + env.getProperty("secured.app.jwtExpirationMs")))
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("secured.app.jwtSecret"))
                 .compact();
     }

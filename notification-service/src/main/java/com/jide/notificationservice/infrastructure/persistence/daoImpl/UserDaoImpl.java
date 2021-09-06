@@ -1,12 +1,12 @@
-package com.jide.accountservice.infrastructure.persistence.daoImpl;
+package com.jide.notificationservice.infrastructure.persistence.daoImpl;
 
 
 
-import com.jide.accountservice.domain.dao.UserDao;
-import com.jide.accountservice.domain.entities.User;
-import com.jide.accountservice.domain.enums.RecordStatusConstant;
-import com.jide.accountservice.infrastructure.exceptions.CustomException;
-import com.jide.accountservice.infrastructure.persistence.repository.UserRepository;
+import com.jide.notificationservice.domain.dao.UserDao;
+import com.jide.notificationservice.domain.entities.User;
+import com.jide.notificationservice.domain.enums.RecordStatusConstant;
+import com.jide.notificationservice.infrastructure.exceptions.CustomException;
+import com.jide.notificationservice.infrastructure.persistence.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 
 import javax.inject.Named;
@@ -29,11 +29,6 @@ public class UserDaoImpl extends CrudDaoImpl<User, Long> implements UserDao {
     }
 
     @Override
-    public User getUserByPhoneNumber(String phoneNumber) {
-        return findUserByPhoneNumber(phoneNumber).orElseThrow(() -> new CustomException("Not Found. User with PhoneNumber: " + phoneNumber, HttpStatus.NOT_FOUND));
-    }
-
-    @Override
     public Optional<User> findUserByEmail(String email) {
         return repository.findFirstByEmailAndRecordStatus(email, RecordStatusConstant.ACTIVE);
     }
@@ -46,11 +41,6 @@ public class UserDaoImpl extends CrudDaoImpl<User, Long> implements UserDao {
     @Override
     public Boolean existsByEmail(String email) {
         return repository.existsByEmailAndRecordStatus(email, RecordStatusConstant.ACTIVE);
-    }
-
-    @Override
-    public Boolean existsByPhoneNumber(String phoneNumber) {
-        return repository.existsByEmailAndRecordStatus(phoneNumber, RecordStatusConstant.ACTIVE);
     }
 
 

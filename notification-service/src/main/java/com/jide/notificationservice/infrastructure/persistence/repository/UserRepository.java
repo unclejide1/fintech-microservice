@@ -1,8 +1,9 @@
-package com.jide.accountservice.infrastructure.persistence.repository;
+package com.jide.notificationservice.infrastructure.persistence.repository;
 
 
-import com.jide.accountservice.domain.entities.User;
-import com.jide.accountservice.domain.enums.RecordStatusConstant;
+
+import com.jide.notificationservice.domain.entities.User;
+import com.jide.notificationservice.domain.enums.RecordStatusConstant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findFirstByEmailAndRecordStatus(String username, RecordStatusConstant statusConstant);
     Optional<User> findFirstByPhoneNumber(String phoneNumber);
     Boolean existsByEmailAndRecordStatus(String username, RecordStatusConstant statusConstant);
-    Boolean existsByPhoneNumberAndRecordStatus(String phoneNumber, RecordStatusConstant statusConstant);
     List<User> getAllByRecordStatus(RecordStatusConstant recordStatusConstant);
 }
