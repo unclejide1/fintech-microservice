@@ -16,6 +16,20 @@ management:
     web:
       exposure:
         include: mappings,health
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 160000000
+        readTimeout: 160000000
+logging:
+  level:
+    com:
+      jide:
+        accountservice:
+          infrastructure:
+            configurations:
+              NotificationFeignClient: DEBUG
 
 
 

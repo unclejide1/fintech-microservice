@@ -11,4 +11,5 @@ public class TransferFundRequest {
     private String fundingAccount;
     private String receivingAccount;
     private BigDecimal amount;
+    private String narration;
 }

@@ -3,7 +3,7 @@ package com.jide.notificationservice.usecases.model;
 import lombok.Data;
 
 @Data
-public class User {
+public class MicroserviceRequest {
 
     private Long id;
 

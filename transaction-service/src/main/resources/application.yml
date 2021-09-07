@@ -17,3 +17,19 @@ api:
     actuator:
       url:
         path: /actuator/*
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 160000000
+        readTimeout: 160000000
+
+logging:
+  level:
+    com:
+      jide:
+        transactionservice:
+          infrastructure:
+            configurations:
+              NotificationFeignClient: DEBUG

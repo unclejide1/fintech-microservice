@@ -7,10 +7,13 @@ import com.jide.transactionservice.domain.entities.FintechAccountEntity;
 import com.jide.transactionservice.domain.entities.User;
 import com.jide.transactionservice.domain.enums.AccountOpeningStageConstant;
 import com.jide.transactionservice.domain.enums.TransactionTypeConstant;
+import com.jide.transactionservice.infrastructure.configurations.NotificationFeignClient;
 import com.jide.transactionservice.infrastructure.exceptions.CustomException;
 import com.jide.transactionservice.usecases.FundAccountUseCase;
 import com.jide.transactionservice.usecases.dto.request.AccountFundingRequest;
+import com.jide.transactionservice.usecases.dto.request.MicroserviceRequest;
 import com.jide.transactionservice.usecases.dto.response.AccountFundingResponse;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -33,6 +36,7 @@ public class FundAccountUseCaseImpl implements FundAccountUseCase {
     private final SequenceEntityDao sequenceEntityDao;
     private final AccountFundingTransactionEntityDao fundingTransactionEntityDao;
     private final AccountTransactionEntityDao transactionEntityDao;
+    private final NotificationFeignClient notificationFeignClient;
 
     private static final Logger logger = LoggerFactory.getLogger(FundAccountUseCaseImpl.class);
 
@@ -82,6 +86,22 @@ public class FundAccountUseCaseImpl implements FundAccountUseCase {
                 .build();
 
         AccountTransactionEntity savedAccountTransaction = transactionEntityDao.saveRecord(accountTransactionEntity);
+
+        MicroserviceRequest microserviceRequest = MicroserviceRequest.builder()
+                .id(savedAccountTransaction.getId())
+                .username(user.getEmail())
+                .type("FUND")
+                .build();
+
+        String response = "";
+        logger.info("about to call notification service to notify on successful funding");
+        try {
+            response = notificationFeignClient.notify(microserviceRequest);
+        }catch (FeignException.FeignClientException e){
+            logger.error(e.getMessage());
+        }
+        logger.info("called notification service with response "+ response);
+
         AccountFundingResponse accountFundingResponse = AccountFundingResponse.builder()
                 .accountNo(updatedUserAccount.getAccountId())
                 .accountType(updatedUserAccount.getAccountType().name())
