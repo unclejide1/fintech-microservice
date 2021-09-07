@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
 import javax.inject.Named;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,10 +49,14 @@ public class UpdateUserDetailsUseCaseImpl implements UpdateUserDetailsUseCase {
         List<AccountCreationResponse> accountCreationResponses = new ArrayList<>();
         if(fintechAccountEntityList.size() > 0) {
             for (FintechAccountEntity fintechAccountEntity : fintechAccountEntityList) {
+                BigDecimal availableBalance = BigDecimal.ZERO;
+                if(fintechAccountEntity.getAvailableBalance() != null){
+                    availableBalance = fintechAccountEntity.getAvailableBalance();
+                }
                 AccountCreationResponse accountCreationResponse = AccountCreationResponse.builder()
                         .accountType(fintechAccountEntity.getAccountType().name())
                         .accountNo(fintechAccountEntity.getAccountId())
-                        .availableBalance(fintechAccountEntity.getAvailableBalance().toString())
+                        .availableBalance(availableBalance.toString())
                         .limit(fintechAccountEntity.getDailyTransactionLimit().toString())
                         .build();
                 accountCreationResponses.add(accountCreationResponse);
