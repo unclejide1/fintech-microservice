@@ -5,4 +5,5 @@ import com.jide.accountservice.usecases.dto.request.SignUpRequest;
 
 public interface SignUpUseCase {
     String createUser(SignUpRequest signUpRequest);
+    String verifyUser(Long id);
 }

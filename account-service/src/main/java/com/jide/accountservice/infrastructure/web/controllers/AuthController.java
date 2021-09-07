@@ -72,6 +72,16 @@ public class AuthController {
         apiResponse.setMessage("login successful");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
+
+//    @ApiOperation(value = "sign in", notes = "This is used to sign in into the platform")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<String>> verify(@PathVariable String id){
+        String response = signUpUseCase.verifyUser(Long.valueOf(id));
+        ApiResponse<String> apiResponse = new ApiResponse<>(HttpStatus.OK);
+        apiResponse.setData(response);
+        apiResponse.setMessage("login successful");
+        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
+    }
 //
 //    @GetMapping(value = "/testall")
 //    public String general(){

@@ -12,16 +12,23 @@ spring:
 
 
 
-
-
-
-
 zuul:
-
+  host:
+    time-to-live: -1
+    connect-timeout-millis: 5000
+    max-per-route-connections: 10000
+    max-total-connections: 5000
+    socket-timeout-millis: 60000
+  semaphore:
+    max-semaphores: 500
   routes:
     account-service:
       path: /accounts/**
       service-id: account-service
+      sensitiveHeaders: Cookie,Set-Cookie
+    notification-service:
+      path: /notification/**
+      service-id: notification-service
 
   ignored-services: '*'
 
@@ -41,7 +48,11 @@ api:
     actuator:
       url:
         path: /actuator/*
-
+ribbon:
+  ReadTimeout: 60000
+  connection-timeout: 3000
+  eureka:
+    enabled: true
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:
   command:
@@ -49,4 +60,4 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 60000
+            timeoutInMilliseconds: 122000

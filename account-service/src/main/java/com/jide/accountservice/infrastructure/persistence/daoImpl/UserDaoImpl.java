@@ -29,6 +29,11 @@ public class UserDaoImpl extends CrudDaoImpl<User, Long> implements UserDao {
     }
 
     @Override
+    public User getUserByPhoneNumber(String phoneNumber) {
+        return findUserByPhoneNumber(phoneNumber).orElseThrow(() -> new CustomException("Not Found. User with PhoneNumber: " + phoneNumber, HttpStatus.NOT_FOUND));
+    }
+
+    @Override
     public Optional<User> findUserByEmail(String email) {
         return repository.findFirstByEmailAndRecordStatus(email, RecordStatusConstant.ACTIVE);
     }
@@ -41,6 +46,11 @@ public class UserDaoImpl extends CrudDaoImpl<User, Long> implements UserDao {
     @Override
     public Boolean existsByEmail(String email) {
         return repository.existsByEmailAndRecordStatus(email, RecordStatusConstant.ACTIVE);
+    }
+
+    @Override
+    public Boolean existsByPhoneNumber(String phoneNumber) {
+        return repository.existsByEmailAndRecordStatus(phoneNumber, RecordStatusConstant.ACTIVE);
     }
 
 

@@ -2,6 +2,7 @@ package com.jide.accountservice.usecases.auth.impl;
 
 
 
+import com.google.gson.Gson;
 import com.jide.accountservice.domain.dao.RoleDao;
 import com.jide.accountservice.domain.dao.UserDao;
 import com.jide.accountservice.domain.entities.Role;
@@ -10,15 +11,18 @@ import com.jide.accountservice.domain.enums.AccountOpeningStageConstant;
 import com.jide.accountservice.domain.enums.ERole;
 import com.jide.accountservice.domain.enums.GenderTypeConstant;
 import com.jide.accountservice.infrastructure.exceptions.CustomException;
-import com.jide.accountservice.infrastructure.security.jwt.JwtAuthenticationFilter;
+//import com.jide.accountservice.infrastructure.security.jwt.JwtAuthenticationFilter;
 import com.jide.accountservice.usecases.auth.SignUpUseCase;
+import com.jide.accountservice.usecases.dto.request.MicroserviceRequest;
 import com.jide.accountservice.usecases.dto.request.SignUpRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Named;
 import java.time.LocalDate;
@@ -32,6 +36,7 @@ public class SignUpUseCaseImpl implements SignUpUseCase {
 
     private final UserDao userDao;
     private final RoleDao roleDao;
+    private final RestTemplate restTemplate;
     private final PasswordEncoder encoder;
 
     private static final Logger logger = LoggerFactory.getLogger(SignUpUseCaseImpl.class);
@@ -42,6 +47,10 @@ public class SignUpUseCaseImpl implements SignUpUseCase {
     public String createUser(SignUpRequest signUpRequest) {
         if (userDao.existsByEmail(signUpRequest.getEmail())) {
            throw new CustomException("A user already exists with this Email: " + signUpRequest.getEmail(), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        if (userDao.existsByPhoneNumber(signUpRequest.getPhoneNumber())) {
+            throw new CustomException("A user already exists with this Phone number: " + signUpRequest.getPhoneNumber(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         if(signUpRequest.getDateOfBirth() != null){
@@ -75,12 +84,47 @@ public class SignUpUseCaseImpl implements SignUpUseCase {
 
         user.setRoles(roles);
 
+
         User savedUser =userDao.saveRecord(user);
+        MicroserviceRequest microserviceRequest = MicroserviceRequest.builder()
+                .id(user.getId())
+                .username(user.getEmail())
+                .type("VERIFY")
+                .build();
+        String payload = new Gson().toJson(microserviceRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
+        ResponseEntity<String> response = null;
+
+        try {
+            response= restTemplate.postForEntity("http://notification-service/api/v1/notify/send/", entity, String.class);
+        } catch (Exception e) {
+//            e.printStackTrace();
+            System.out.println(e.getMessage());
+//            responseBody = handleException(e);
+        }
+
+       String responseEntityBody = response.getBody();
+        logger.info("response>>>>" + responseEntityBody);
         logger.info("user>>>" + savedUser.toString());
         System.out.println(savedUser.toString());
 
 
         return "Saved";
+    }
+
+    @Override
+    public String verifyUser(Long id) {
+            User user = userDao.getRecordById(id);
+            if(user.getStatus().name().equalsIgnoreCase(AccountOpeningStageConstant.VERIFIED.name())){
+                throw new CustomException("Profile has already been verified", HttpStatus.BAD_REQUEST);
+            }
+            user.setStatus(AccountOpeningStageConstant.VERIFIED);
+            userDao.saveRecord(user);
+
+        return "Profile has been verified";
     }
 
     public static void addRoles(Set<String> strRoles, Set<Role> roles, RoleDao roleDao) {

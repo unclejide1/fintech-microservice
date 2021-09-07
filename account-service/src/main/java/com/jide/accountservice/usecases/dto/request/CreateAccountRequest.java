@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 
@@ -13,10 +14,10 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ManageUserRequest {
-    private String username;
+public class CreateAccountRequest {
+    private String accountType;
 
-    private Set<String> roles;
-    private String dept;
+
+    private BigDecimal limit;
 
 }
