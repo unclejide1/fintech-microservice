@@ -8,3 +8,12 @@ spring:
     port: 5672
     username: guest
     password: freedom
+api:
+  transaction:
+    actuator:
+      url:
+        path: /transaction/actuator/*
+  zuul:
+    actuator:
+      url:
+        path: /actuator/*
