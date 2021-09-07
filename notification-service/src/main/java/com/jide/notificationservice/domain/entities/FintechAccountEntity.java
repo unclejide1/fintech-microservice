@@ -1,7 +1,7 @@
-package com.jide.accountservice.domain.entities;
+package com.jide.notificationservice.domain.entities;
 
-import com.jide.accountservice.domain.enums.AccountAccessStatusConstant;
-import com.jide.accountservice.domain.enums.AccountTypeConstant;
+import com.jide.notificationservice.domain.enums.AccountAccessStatusConstant;
+import com.jide.notificationservice.domain.enums.AccountTypeConstant;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,12 +34,6 @@ public class FintechAccountEntity extends AbstractBaseEntity<Long> {
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private User creator;
-
-    @Builder.Default
-    private BigDecimal availableBalance = BigDecimal.ZERO;
-
-    @Builder.Default
-    private BigDecimal ledgerBalance = BigDecimal.ZERO;
 
     @Builder.Default
     private BigDecimal dailyTransactionLimit = BigDecimal.ZERO;

@@ -11,7 +11,7 @@ import com.jide.accountservice.domain.enums.AccountOpeningStageConstant;
 import com.jide.accountservice.domain.enums.ERole;
 import com.jide.accountservice.domain.enums.GenderTypeConstant;
 import com.jide.accountservice.infrastructure.exceptions.CustomException;
-import com.jide.accountservice.infrastructure.security.jwt.JwtAuthenticationFilter;
+//import com.jide.accountservice.infrastructure.security.jwt.JwtAuthenticationFilter;
 import com.jide.accountservice.usecases.auth.SignUpUseCase;
 import com.jide.accountservice.usecases.dto.request.MicroserviceRequest;
 import com.jide.accountservice.usecases.dto.request.SignUpRequest;
@@ -89,7 +89,7 @@ public class SignUpUseCaseImpl implements SignUpUseCase {
         MicroserviceRequest microserviceRequest = MicroserviceRequest.builder()
                 .id(user.getId())
                 .username(user.getEmail())
-                .type("verify")
+                .type("VERIFY")
                 .build();
         String payload = new Gson().toJson(microserviceRequest);
         HttpHeaders headers = new HttpHeaders();
@@ -118,10 +118,13 @@ public class SignUpUseCaseImpl implements SignUpUseCase {
     @Override
     public String verifyUser(Long id) {
             User user = userDao.getRecordById(id);
+            if(user.getStatus().name().equalsIgnoreCase(AccountOpeningStageConstant.VERIFIED.name())){
+                throw new CustomException("Profile has already been verified", HttpStatus.BAD_REQUEST);
+            }
             user.setStatus(AccountOpeningStageConstant.VERIFIED);
             userDao.saveRecord(user);
 
-        return "account has been verified";
+        return "Profile has been verified";
     }
 
     public static void addRoles(Set<String> strRoles, Set<Role> roles, RoleDao roleDao) {

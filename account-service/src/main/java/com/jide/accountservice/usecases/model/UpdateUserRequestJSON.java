@@ -21,8 +21,6 @@ public class UpdateUserRequestJSON {
     private String lastName;
 
 
-    @ApiModelProperty(notes = "Format: dd/MM/yyyy")
-    private String dateOfBirth;
 
     @ApiModelProperty(notes = "phone number")
     private String phoneNumber;
@@ -37,7 +35,6 @@ public class UpdateUserRequestJSON {
         return UpdateUserDetailsRequest.builder()
                 .firstName(firstName)
                 .lastName(lastName)
-                .dateOfBirth(LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd/MM/yyyy")))
                 .phoneNumber(phoneNumber)
                 .gender(gender)
                 .build();

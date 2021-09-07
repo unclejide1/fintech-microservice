@@ -1,7 +1,8 @@
-package com.jide.accountservice.domain.dao;
+package com.jide.notificationservice.domain.dao;
 
-import com.jide.accountservice.domain.entities.FintechAccountEntity;
-import com.jide.accountservice.domain.entities.User;
+
+import com.jide.notificationservice.domain.entities.FintechAccountEntity;
+import com.jide.notificationservice.domain.entities.User;
 
 import java.util.List;
 import java.util.Optional;

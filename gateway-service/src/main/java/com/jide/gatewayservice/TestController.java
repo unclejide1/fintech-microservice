@@ -12,17 +12,17 @@ import java.security.Principal;
 
 public class TestController {
 
-    @GetMapping("/user")
-    public @ResponseBody
-    ResponseEntity<String> retrieveAllUsers(Principal principal){
-//       String trackingReference = sequenceEntityDao.getNextAccountId();
-//       String trackingReference2 = sequenceEntityDao.getNextTransactionReference();
-        String trackingReference = principal.getName();
-        String trackingReference2 = "yyytytyyt";
+//    @GetMapping("/user")
+//    public @ResponseBody
+//    ResponseEntity<String> retrieveAllUsers(Principal principal){
+////       String trackingReference = sequenceEntityDao.getNextAccountId();
+////       String trackingReference2 = sequenceEntityDao.getNextTransactionReference();
+//        String trackingReference = principal.getName();
+//        String trackingReference2 = "yyytytyyt";
 
-        return new ResponseEntity<String>(trackingReference, HttpStatus.ACCEPTED);
+//        return new ResponseEntity<String>(trackingReference, HttpStatus.ACCEPTED);
 
-    }
+//    }
 
 
 }

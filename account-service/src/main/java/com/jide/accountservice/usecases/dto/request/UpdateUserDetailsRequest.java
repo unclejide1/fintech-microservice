@@ -13,10 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateUserDetailsRequest {
-    private Long id;
     private String firstName;
     private String lastName;
-    private LocalDate dateOfBirth;
     private String phoneNumber;
     private String gender;
 }

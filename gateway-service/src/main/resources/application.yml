@@ -25,6 +25,7 @@ zuul:
     account-service:
       path: /accounts/**
       service-id: account-service
+      sensitiveHeaders: Cookie,Set-Cookie
     notification-service:
       path: /notification/**
       service-id: notification-service
@@ -59,4 +60,4 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 60000
+            timeoutInMilliseconds: 122000
