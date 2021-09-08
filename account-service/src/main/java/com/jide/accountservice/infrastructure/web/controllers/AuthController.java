@@ -28,8 +28,6 @@ import javax.validation.Valid;
 @RequestMapping(value = "api/v1/auth")
 public class AuthController {
 
-    @Value("${secured.app.jwtSecret}")
-    private String jwtSecret;
 
     @Autowired
     private Environment env;
@@ -37,12 +35,7 @@ public class AuthController {
     private final SignUpUseCase signUpUseCase;
     private final LoginUseCase loginUseCase;
 
-//    private final SequenceEntityDao sequenceEntityDao;
-//
-//    @Autowired
-//    public AuthController(SequenceEntityDao sequenceEntityDao) {
-//        this.sequenceEntityDao = sequenceEntityDao;
-//    }
+
 
     @Autowired
     public AuthController(SignUpUseCase signUpUseCase, LoginUseCase loginUseCase) {
@@ -82,19 +75,7 @@ public class AuthController {
         apiResponse.setMessage("login successful");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
-//
-//    @GetMapping(value = "/testall")
-//    public String general(){
-//        return "all";
-//    }
-//
-//
-//    @GetMapping(value = "/admin")
-//    @Secured("ROLE_ADMIN")
-//    public String admin(){
-//        return "admin";
-//    }
-//
+
    @GetMapping("/users")
     public @ResponseBody ResponseEntity<ApiResponse<String>>  retrieveAllUsers(){
 //       String trackingReference = sequenceEntityDao.getNextAccountId();

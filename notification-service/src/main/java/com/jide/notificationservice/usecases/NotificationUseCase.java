@@ -1,7 +1,7 @@
 package com.jide.notificationservice.usecases;
 
-import com.jide.notificationservice.usecases.model.User;
+import com.jide.notificationservice.usecases.model.MicroserviceRequest;
 
 public interface NotificationUseCase {
-    String sendMessage(User input);
+    String sendMessage(MicroserviceRequest request);
 }

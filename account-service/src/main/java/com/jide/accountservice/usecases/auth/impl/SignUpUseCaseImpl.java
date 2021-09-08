@@ -10,11 +10,13 @@ import com.jide.accountservice.domain.entities.User;
 import com.jide.accountservice.domain.enums.AccountOpeningStageConstant;
 import com.jide.accountservice.domain.enums.ERole;
 import com.jide.accountservice.domain.enums.GenderTypeConstant;
+import com.jide.accountservice.infrastructure.configurations.NotificationFeignClient;
 import com.jide.accountservice.infrastructure.exceptions.CustomException;
 //import com.jide.accountservice.infrastructure.security.jwt.JwtAuthenticationFilter;
 import com.jide.accountservice.usecases.auth.SignUpUseCase;
 import com.jide.accountservice.usecases.dto.request.MicroserviceRequest;
 import com.jide.accountservice.usecases.dto.request.SignUpRequest;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ public class SignUpUseCaseImpl implements SignUpUseCase {
     private final RoleDao roleDao;
     private final RestTemplate restTemplate;
     private final PasswordEncoder encoder;
+    private final NotificationFeignClient notificationFeignClient;
 
     private static final Logger logger = LoggerFactory.getLogger(SignUpUseCaseImpl.class);
 
@@ -86,30 +89,25 @@ public class SignUpUseCaseImpl implements SignUpUseCase {
 
 
         User savedUser =userDao.saveRecord(user);
+                logger.info("saved user>>>" + savedUser.toString());
         MicroserviceRequest microserviceRequest = MicroserviceRequest.builder()
                 .id(user.getId())
                 .username(user.getEmail())
                 .type("VERIFY")
                 .build();
-        String payload = new Gson().toJson(microserviceRequest);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
-        ResponseEntity<String> response = null;
-
+        String response = "";
+        logger.info("about to call notification service");
         try {
-            response= restTemplate.postForEntity("http://notification-service/api/v1/notify/send/", entity, String.class);
-        } catch (Exception e) {
-//            e.printStackTrace();
-            System.out.println(e.getMessage());
-//            responseBody = handleException(e);
+            response = notificationFeignClient.notify(microserviceRequest);
+        }catch (FeignException.FeignClientException e){
+            logger.error(e.getMessage());
         }
+        logger.info("called notification service with response "+ response);
 
-       String responseEntityBody = response.getBody();
-        logger.info("response>>>>" + responseEntityBody);
-        logger.info("user>>>" + savedUser.toString());
-        System.out.println(savedUser.toString());
+
+
+//        System.out.println(savedUser.toString());
 
 
         return "Saved";

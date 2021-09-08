@@ -1,5 +1,5 @@
 server:
-  port: ${port:9200}
+  port: ${port:9800}
 spring:
   rabbitmq:
     host: localhost
@@ -11,11 +11,38 @@ spring:
       enabled: true
   application:
     name: account-service
+  zipkin:
+    base-url: http://localhost:9411
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      probability: 1
 management:
   endpoints:
     web:
       exposure:
         include: mappings,health
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 160000000
+        readTimeout: 160000000
+logging:
+  level:
+    com:
+      jide:
+        accountservice:
+          infrastructure:
+            configurations:
+              NotificationFeignClient: DEBUG
+  file:
+    name: account-service.log
+
+
 
 
 

@@ -26,6 +26,10 @@ zuul:
       path: /accounts/**
       service-id: account-service
       sensitiveHeaders: Cookie,Set-Cookie
+    transaction-service:
+      path: /transaction/**
+      service-id: transaction-service
+      sensitiveHeaders: Cookie,Set-Cookie
     notification-service:
       path: /notification/**
       service-id: notification-service
