@@ -1,4 +1,4 @@
-package com.jide.notificationservice.configuration;
+package com.jide.notificationservice.infrastructure.configurations;
 
 
 import com.jide.notificationservice.domain.dao.RoleDao;

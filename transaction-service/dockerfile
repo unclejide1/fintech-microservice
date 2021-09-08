@@ -1,0 +1,4 @@
+FROM openjdk:13-jdk-alpine
+VOLUME /tmp
+COPY target/transaction-service-0.0.1-SNAPSHOT.jar TransactionService.jar
+ENTRYPOINT ["java","-jar","TransactionService.jar"]

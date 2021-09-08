@@ -11,29 +11,42 @@ import com.jide.notificationservice.usecases.model.Mail;
 
 import com.jide.notificationservice.usecases.model.MicroserviceRequest;
 import com.jide.notificationservice.usecases.utils.EmailSender;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import javax.inject.Named;
-
-@Slf4j
-@Named
-@AllArgsConstructor
+@Service
 public class NotificationUseCaseImpl implements NotificationUseCase {
+
 
     private final UserDao userDao;
 
+
+
+
     private final FintechAccountEntityDao fintechAccountEntityDao;
+
     private final AccountTransactionEntityDao accountTransactionEntityDao;
 
-    @Autowired
+
     public EmailSender emailSender;
+
+    @Value("${gateway.public.ip:3.16.180.134}")
+    private String gatewayPublicIp;
+
+    @Autowired
+    public NotificationUseCaseImpl(UserDao userDao, FintechAccountEntityDao fintechAccountEntityDao, AccountTransactionEntityDao accountTransactionEntityDao,
+                                   EmailSender emailSender) {
+        this.userDao = userDao;
+        this.fintechAccountEntityDao = fintechAccountEntityDao;
+        this.accountTransactionEntityDao = accountTransactionEntityDao;
+        this.emailSender = emailSender;
+    }
 
 
     @Override
     public String sendMessage(MicroserviceRequest request) {
-        String link = String.format("http://localhost:8765/accounts/api/v1/auth/%s", String.valueOf(request.getId()));
+        String link = String.format("http://%s:8765/accounts/api/v1/auth/%s",gatewayPublicIp, String.valueOf(request.getId()));
 
         Mail newMail = new Mail();
         newMail.setTo(request.getUsername());
@@ -91,6 +104,7 @@ public class NotificationUseCaseImpl implements NotificationUseCase {
                                     "Transaction type:  " + transactionType + "\n" +
                                     "Transaction reference:  " + accountTransactionEntity.getTransactionReference() + "\n" +
                                     "You are Welcome.";
+                    break;
 
                 case "DEBIT":
                     newMail.setSubject("DEBIT ALERT");

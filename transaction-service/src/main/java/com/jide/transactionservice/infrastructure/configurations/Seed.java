@@ -1,4 +1,4 @@
-package com.jide.transactionservice.configuration;
+package com.jide.transactionservice.infrastructure.configurations;
 
 
 import com.jide.transactionservice.domain.dao.RoleDao;

@@ -9,3 +9,10 @@ spring:
   application:
     name: notification-service
 
+logging:
+  file:
+    name: notification-service.log
+
+gateway:
+  public:
+    ip: 3.16.180.134

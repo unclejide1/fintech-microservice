@@ -1,4 +1,4 @@
-package com.jide.accountservice.configuration;
+package com.jide.accountservice.infrastructure.configurations;
 
 
 
