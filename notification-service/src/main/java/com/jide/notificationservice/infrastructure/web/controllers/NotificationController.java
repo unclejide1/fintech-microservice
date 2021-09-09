@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 
 @Validated
-@Api(tags = "Authentication Endpoints")
+@Api(tags = "Notification Endpoints")
 @RestController
 @RequestMapping(value = "api/v1/notify")
 public class NotificationController {

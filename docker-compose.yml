@@ -1,0 +1,93 @@
+version: '3.6'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - 15672:15672 
+      - 5672:5672 
+      - 5671:5671
+    # networks:
+    #   - dev
+  mydb:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: fintechapp
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: test
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 1007
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 1007
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - 3307:3306
+    volumes:
+      - my-db:/var/lib/mysql
+    # networks:
+    #   - dev
+
+  config-server:
+    container_name: config-server
+    build:
+      context: ./config-server
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9600:9600
+    depends_on:
+      - rabbitmq
+    # networks:
+    #   - dev
+
+  discovery-server:
+    container_name: discovery-server
+    build:
+      context: ./discovery-server
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 8761:8761
+    depends_on:
+      - rabbitmq
+      - config-server
+    # networks:
+    #   - dev
+
+  gateway-server:
+    container_name: gateway-server
+    build:
+      context: ./gateway-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 8765:8765
+    depends_on:
+      - rabbitmq
+      - config-server
+      - discovery-server
+      
+    # networks:
+    #   - dev
+
+  account-server:
+    container_name: account-server
+    build:
+      context: ./account-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9800:9800
+    depends_on:
+      - rabbitmq
+      - config-server
+      - discovery-server
+      - mydb
+    # networks:
+    #   - dev
+
+volumes:
+  my-db:
+# networks:
+#   dev:

@@ -44,3 +44,7 @@ logging:
               NotificationFeignClient: DEBUG
   file:
     name: transaction-service.log
+
+
+myapplication:
+  enviroment: production profile

@@ -58,7 +58,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo(version))
                 .securitySchemes(Lists.newArrayList(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.betchess.infrastructure.web.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.jide.transactionservice.infrastructure.web.controllers"))
                 .paths(PathSelectors.any())
                 .build();
 
@@ -70,25 +70,12 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo(String version) {
         return new ApiInfoBuilder()
-                .title("Betchess Application")
-                .description("API services for managing betchess affairs")
+                .title("Transaction Microservice")
+                .description("API services for transaction Microservice")
                 .version(version)
                 .build();
     }
-//    @Bean
-//    public UiConfiguration uiConfig() {
-//        return new UiConfiguration(true, false, 1, 1, false, null,
-//                 false,  UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS, null);
-//    }
-////@Bean
-//
-//public Docket productApi() {
-//
-//    return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com.systemspecs.evoting.infrastructure.web.controllers")).paths(PathSelectors.any())
-//
-//            .build();
-//
-//}
+
 }
 
 

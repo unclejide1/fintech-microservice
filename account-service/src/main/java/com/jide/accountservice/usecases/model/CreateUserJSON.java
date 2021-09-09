@@ -39,13 +39,11 @@ public class CreateUserJSON {
     @Pattern(regexp = "(MALE|male|FEMALE|female)")
     private String gender;
 
-    @ApiModelProperty(notes = "Types: ADMIN,admin,USER,user,MANAGER,manager")
-//    @Pattern(regexp = (ADMIN|admin|USER|user|MANAGER|manager)")
+    @ApiModelProperty(notes = "Types: ADMIN,admin,USER,user")
+//    @Pattern(regexp = "(ADMIN|admin|USER|user)")
     private Set<String> roles;
 
-    @ApiModelProperty(notes = "Types: QA,qa,DEV,dev,HR,hr")
-    @Pattern(regexp = "(QA|qa|DEV|dev|HR|hr|ALL|all)")
-    private String dept;
+
 
     @ApiModelProperty(notes = "password", required = true)
     @NotBlank(message = "password is required")

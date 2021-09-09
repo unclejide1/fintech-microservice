@@ -1,4 +1,17 @@
-FROM openjdk:13-jdk-alpine
-VOLUME /tmp
-COPY target/discovery-service-0.0.1-SNAPSHOT.jar DiscoveryService.jar
-ENTRYPOINT ["java","-jar","DiscoveryService.jar"]
+#FROM openjdk:13-jdk-alpine
+#VOLUME /tmp
+#COPY target/discovery-service-0.0.1-SNAPSHOT.jar DiscoveryService.jar
+#ENTRYPOINT ["java","-jar","DiscoveryService.jar"]
+
+
+FROM fintech/discoveryserver-builder:latest AS MAVEN_BUILD
+
+COPY pom.xml /build/
+
+WORKDIR /build/
+
+COPY src /build/src/
+
+ENV JAVA_OPTS=""
+
+ENTRYPOINT mvn spring-boot:run

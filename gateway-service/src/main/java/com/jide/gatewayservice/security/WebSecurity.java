@@ -32,33 +32,26 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(jwtConfig.getUri()).permitAll()
                 .antMatchers(env.getProperty("api.account.actuator.url.path")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.actuator.url.path")).permitAll()
+                .antMatchers(env.getProperty("api.notification.actuator.url.path")).permitAll()
                 .antMatchers(env.getProperty("api.zuul.actuator.url.path")).permitAll()
-//                .antMatchers(HttpMethod.POST, environment.getProperty("api.registration.url.path")).permitAll()
-//                .antMatchers(HttpMethod.POST, environment.getProperty("api.login.url.path")).permitAll()
+                .antMatchers(env.getProperty("api.account.swagger.url.patha")).permitAll()
+                .antMatchers(env.getProperty("api.account.swagger.url.pathb")).permitAll()
+                .antMatchers(env.getProperty("api.account.swagger.url.pathc")).permitAll()
+                .antMatchers(env.getProperty("api.account.swagger.url.pathd")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.patha")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.pathb")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.pathc")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.pathd")).permitAll()
+                .antMatchers(env.getProperty("api.notification.swagger.url.patha")).permitAll()
+                .antMatchers(env.getProperty("api.notification.swagger.url.pathb")).permitAll()
+                .antMatchers(env.getProperty("api.notification.swagger.url.pathc")).permitAll()
+                .antMatchers(env.getProperty("api.notification.swagger.url.pathd")).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(new JwtTokenAuthenticationFilter(authenticationManager(),jwtConfig), UsernamePasswordAuthenticationFilter.class);
-//                .addFilter(new AuthorizationFilter(authenticationManager(), environment));
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http
-//                .csrf().disable()
-//                // make sure we use stateless session; session won't be used to store user's state.
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                // handle an authorized attempts
-//                .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_BAD_GATEWAY))
-//                .and()
-//                // Add a filter to validate the tokens with every request
-//                .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
-//                // authorization requests config
-//                .authorizeRequests()
-//                // allow all who are accessing "auth" service
-//                .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
-//                // must be an admin if trying to access admin area (authentication is also required here)
-////                .antMatchers("/gallery" + "/admin/**").hasRole("ADMIN")
-//                // Any ot   her request must be authenticated
-//                .anyRequest().authenticated();
     }
 
 

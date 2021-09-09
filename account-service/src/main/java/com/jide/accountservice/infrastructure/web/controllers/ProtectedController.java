@@ -15,6 +15,7 @@ import com.jide.accountservice.usecases.model.CreateAccountRequestJSON;
 import com.jide.accountservice.usecases.model.UpdateUserRequestJSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,9 @@ import java.io.IOException;
 import java.security.Principal;
 
 @Validated
-//@Api(tags = "Protected Endpoints")
+@Api(tags = "Fintech account creation Endpoints")
 @RestController
-@RequestMapping(value = "api/v1/test")
+@RequestMapping(value = "api/v1/profile")
 @Secured("ROLE_USER")
 public class ProtectedController {
     private final CreateAccountUseCase createAccountUseCase;
@@ -52,7 +53,7 @@ public class ProtectedController {
         this.updateUserDetailsUseCase = updateUserDetailsUseCase;
     }
 
-    @ApiOperation(value = "create account", notes = "This is used to create account")
+    @ApiOperation(value = "create account", notes = "This is used to create account", authorizations = { @Authorization(value="Authorization") })
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<ApiResponse<AccountCreationResponse>>  createAccount(@Valid @RequestBody CreateAccountRequestJSON createAccountRequestJSON, Authentication authentication){
         String email = StringUtils.EMPTY;
@@ -67,7 +68,7 @@ public class ProtectedController {
 
     }
 
-    @ApiOperation(value = "update profile", notes = "This is used to update profile")
+    @ApiOperation(value = "update profile", notes = "This is used to update profile", authorizations = { @Authorization(value="Authorization") })
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<ApiResponse<UserDetailsResponse>>  updateProfile(@Valid @RequestBody UpdateUserRequestJSON updateUserRequestJSON, Authentication authentication){
         String email = StringUtils.EMPTY;
