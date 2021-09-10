@@ -9,6 +9,8 @@ import com.jide.transactionservice.usecases.dto.response.AccountBalanceResponse;
 import com.jide.transactionservice.usecases.dto.response.AccountFundingResponse;
 import com.jide.transactionservice.usecases.dto.response.TransferFundResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class TransactionController {
         this.accountBalanceUseCase = accountBalanceUseCase;
     }
 
-    //    @ApiOperation(value = "sign in", notes = "This is used to sign in into the platform")
+    @ApiOperation(value = "send money", notes = "This is used to transfer funds", authorizations = { @Authorization(value="Authorization") })
     @PutMapping(value = "/send", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<TransferFundResponse>> transfer(@Valid @RequestBody TransferFundRequest request, Authentication authentication){
         TransferFundResponse response = transferFundUseCase.sendMoney(request, authentication.getName());
@@ -42,6 +44,7 @@ public class TransactionController {
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
+    @ApiOperation(value = "account balance", notes = "This is used to get account balance", authorizations = { @Authorization(value="Authorization") })
     @GetMapping(value = "/{accountNo}",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<AccountBalanceResponse>> getAccountBalance(@PathVariable String accountNo, Authentication authentication){
         AccountBalanceResponse response = accountBalanceUseCase.getAccountBalance(accountNo, authentication.getName());

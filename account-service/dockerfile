@@ -1,4 +1,17 @@
-FROM openjdk:13-jdk-alpine
-VOLUME /tmp
-COPY target/account-service-0.0.1-SNAPSHOT.jar AccountService.jar
-ENTRYPOINT ["java","-jar","AccountService.jar"]
+#FROM openjdk:13-jdk-alpine
+#VOLUME /tmp
+#COPY target/account-service-0.0.1-SNAPSHOT.jar AccountService.jar
+#ENTRYPOINT ["java","-jar","AccountService.jar"]
+
+
+FROM fintech/accountserver-builder:latest AS MAVEN_BUILD
+
+COPY pom.xml /build/
+
+WORKDIR /build/
+
+COPY src /build/src/
+
+ENV JAVA_OPTS=""
+
+ENTRYPOINT mvn spring-boot:run -Dspring-boot.run.profiles=development

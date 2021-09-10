@@ -31,12 +31,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(jwtConfig.getUri()).permitAll()
                 .antMatchers(env.getProperty("api.transaction.actuator.url.path")).permitAll()
                 .antMatchers(env.getProperty("api.zuul.actuator.url.path")).permitAll()
-//                .antMatchers(HttpMethod.POST, environment.getProperty("api.registration.url.path")).permitAll()
-//                .antMatchers(HttpMethod.POST, environment.getProperty("api.login.url.path")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.patha")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.pathb")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.pathc")).permitAll()
+                .antMatchers(env.getProperty("api.transaction.swagger.url.pathd")).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterAfter(new JwtTokenAuthenticationFilter(authenticationManager(),jwtConfig), UsernamePasswordAuthenticationFilter.class);
-//                .addFilter(new AuthorizationFilter(authenticationManager(), environment));
+
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 //        http

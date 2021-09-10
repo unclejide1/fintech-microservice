@@ -42,6 +42,10 @@ logging:
   file:
     name: account-service.log
 
+myapplication:
+  enviroment: default profile
+
+
 
 
 

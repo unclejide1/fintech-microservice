@@ -33,7 +33,6 @@ public class User extends AbstractBaseEntity<Long> {
     @Column(updatable = false)
     private LocalDate dateOfBirth;
 
-    @Column(unique = true)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)

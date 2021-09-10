@@ -1,0 +1,156 @@
+version: '3.7'
+x-common-resourceserver: &common-resourceserver
+  restart: unless-stopped 
+  environment:
+    - JAVA_OPTS=
+      -DEUREKA_SERVER=http://discovery-server/eureka
+      -DSPRING_DATASOURCE_URL=jdbc:mysql://my_db:3307/fintechapp?serverTimezone=UTC
+      -DDB_HOST=my_db
+      -DSPRING_DATASOURCE_USERNAME=test
+      -DSPRING_DATASOURCE_PASSWORD=1007
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - 15672:15672 
+      - 5672:5672 
+      - 5671:5671
+    networks:
+      - test
+  my_db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: fintechapp
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: test
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 1007
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 1007
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - 3307:3306
+    volumes:
+      - my-db:/var/lib/mysql
+
+    networks:
+      - test
+  
+
+  config:
+    container_name: config-server
+    build:
+      context: ./config-server
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9600:9600
+    # depends_on:
+    #   - rabbitmq
+
+    networks:
+      - test
+
+  discovery:
+    container_name: discovery-server
+    build:
+      context: ./discovery-server
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 8761:8761
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
+    depends_on:
+      - rabbitmq
+      # - config
+
+    networks:
+      - test
+
+  gateway:
+    container_name: gateway-server
+    build:
+      context: ./gateway-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 8765:8765
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
+    depends_on:
+      - discovery 
+    networks:
+      - test
+
+  account:
+    container_name: account-server
+    build:
+      context: ./account-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9800:9800
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
+    depends_on:
+      - discovery
+      - my_db
+    networks:
+      - test
+
+  transaction:
+    container_name: transaction-server
+    build:
+      context: ./transaction-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9500:9500
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
+    depends_on:
+      - discovery
+      - my_db
+    networks:
+      - test
+  
+  notification:
+    container_name: notification-server
+    build:
+      context: ./notification-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9400:9400
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
+    depends_on:
+      - discovery
+      - my_db
+    networks:
+      - test
+
+volumes:
+  my-db:
+
+networks:
+  test:
+    driver: bridge

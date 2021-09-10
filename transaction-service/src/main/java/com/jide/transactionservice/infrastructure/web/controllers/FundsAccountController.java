@@ -7,6 +7,7 @@ import com.jide.transactionservice.usecases.dto.request.AccountFundingRequest;
 import com.jide.transactionservice.usecases.dto.response.AccountFundingResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import javax.validation.Valid;
 
 
 @Validated
-@Api(tags = "Authentication Endpoints")
+@Api(tags = "Fund Account Endpoints")
 @RestController
 @RequestMapping(value = "api/v1/account")
 public class FundsAccountController {
@@ -36,7 +37,7 @@ public class FundsAccountController {
         this.fundAccountUseCase = fundAccountUseCase;
     }
 
-    //    @ApiOperation(value = "sign in", notes = "This is used to sign in into the platform")
+    @ApiOperation(value = "fund account", notes = "This is used to fund account", authorizations = { @Authorization(value="Authorization") })
     @PutMapping(value = "/fund", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<AccountFundingResponse>> verify(@Valid @RequestBody AccountFundingRequest request, Authentication authentication){
         AccountFundingResponse response = fundAccountUseCase.fundAccount(request, authentication.getName());

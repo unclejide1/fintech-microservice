@@ -64,5 +64,15 @@ public class JwtUtils {
         return false;
     }
 
+    public String createToken(String username) {
+        String jwt = Jwts.builder()
+                .setSubject(username)
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+
+        return jwt;
+    }
+
 
 }

@@ -29,8 +29,6 @@ import javax.validation.Valid;
 public class AuthController {
 
 
-    @Autowired
-    private Environment env;
 
     private final SignUpUseCase signUpUseCase;
     private final LoginUseCase loginUseCase;
@@ -42,7 +40,7 @@ public class AuthController {
         this.signUpUseCase = signUpUseCase;
         this.loginUseCase = loginUseCase;
     }
-//
+
     @ApiOperation(value = "register", notes = "This is used to create a user")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<String>> signUp(@Valid @RequestBody CreateUserJSON requestJSON){
@@ -66,27 +64,16 @@ public class AuthController {
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
-//    @ApiOperation(value = "sign in", notes = "This is used to sign in into the platform")
+    @ApiOperation(value = "Verify", notes = "This is used to Verify a user")
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse<String>> verify(@PathVariable String id){
         String response = signUpUseCase.verifyUser(Long.valueOf(id));
         ApiResponse<String> apiResponse = new ApiResponse<>(HttpStatus.OK);
         apiResponse.setData(response);
-        apiResponse.setMessage("login successful");
+        apiResponse.setMessage("Verification Successful");
         return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
     }
 
-   @GetMapping("/users")
-    public @ResponseBody ResponseEntity<ApiResponse<String>>  retrieveAllUsers(){
-//       String trackingReference = sequenceEntityDao.getNextAccountId();
-//       String trackingReference2 = sequenceEntityDao.getNextTransactionReference();
-       String trackingReference = "tetrttrtrttr";
-       String trackingReference2 = env.getProperty("secured.app.jwtSecret");
-       ApiResponse<String> apiResponse = new ApiResponse<>(HttpStatus.OK);
-        apiResponse.setData(trackingReference);
-        apiResponse.setMessage(trackingReference2);
-        return new ResponseEntity<>(apiResponse, apiResponse.getStatus());
 
-    }
 
 }

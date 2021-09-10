@@ -74,9 +74,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/swagger-ui.html").permitAll()
                 .antMatchers("/v2/api-docs", "/webjars/**").permitAll()
-//                .antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/**").hasIpAddress(environment.getProperty("gateway.ip"))
-//                .antMatchers("/api/v1/test/**").permitAll()
+                .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/profile/**").permitAll()
+//                .antMatchers("/**").hasIpAddress(environment.getProperty("gateway.ip"))
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

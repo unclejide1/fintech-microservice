@@ -1,0 +1,72 @@
+server:
+  port: ${port:9400}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://discovery:8761/eureka}
+
+spring:
+  mail:
+    host: smtp.mail.yahoo.com
+    port: 587
+    username: fintechapp@yahoo.com
+    password: hyhcidvjwtuuwkpy
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+
+  datasource:
+    # Connection url for the database "fintech"
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:3.138.86.17}:3306/fintechapp?createDatabaseIfNotExist=true&userSSL=false&serverTimezone=UTC}
+    # Username and secret
+    username: ${SPRING_DATASOURCE_USERNAME:ofor}
+    password: ${SPRING_DATASOURCE_PASSWORD:1007}
+    initialization-mode: always
+    dbcp2:
+      # Keep the connection alive if idle for a long time (needed in production)
+      test-while-idle: true
+      validation-query: SELECT 1
+  jpa:
+      # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
+      # stripped before adding them to the entity manager).
+
+      # Show or not log for each sql query for debugging purposes. NB make sure to turn this off in production to avoid leaking some information
+    hibernate:
+        # Hibernate ddl auto (create, create-drop, update): with "update" the database
+        # schema will be automatically updated accordingly to java entities found in
+        # the project
+        ddl-auto: update
+    show-sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: freedom
+  application:
+    name: notification-service
+
+logging:
+  file:
+    name: notification-service.log
+
+security:
+  basic:
+    enabled: false
+
+gateway:
+  public:
+    ip: 3.16.180.134
+
+secured:
+  app:
+    uri: /accounts/api/v1/auth/**
+    header: Authorization
+    prefix: Bearer
+    jwtSecret: SecuredSecretKeyabracadabrajide05
+    jwtExpirationMs: 86400000
+myapplication:
+  enviroment: development profile
