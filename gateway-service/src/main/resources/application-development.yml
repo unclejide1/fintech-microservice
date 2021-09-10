@@ -1,5 +1,5 @@
 server:
-  port: 8766
+  port: 8765
 spring:
   application:
     name: gateway-service
@@ -12,11 +12,12 @@ spring:
 
 eureka:
   instance:
+#    hostName: service-name
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_SERVER:http://discovery:8761/eureka}
 
 secured:
   app:

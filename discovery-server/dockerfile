@@ -14,4 +14,4 @@ COPY src /build/src/
 
 ENV JAVA_OPTS=""
 
-ENTRYPOINT mvn spring-boot:run
+ENTRYPOINT mvn spring-boot:run -Dspring-boot.run.profiles=development

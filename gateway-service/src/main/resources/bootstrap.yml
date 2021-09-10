@@ -1,5 +1,10 @@
 spring:
   cloud:
     config:
-      uri: http://localhost:9600
+      uri: ${CONFIG_SERVER:http://localhost:9600}
       name: gateway-service
+    inetutils:
+      ignoredInterfaces:
+        - lo
+        - lo*
+        - eth0*

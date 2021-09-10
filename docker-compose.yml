@@ -1,4 +1,13 @@
-version: '3.6'
+version: '3.7'
+x-common-resourceserver: &common-resourceserver
+  restart: unless-stopped 
+  environment:
+    - JAVA_OPTS=
+      -DEUREKA_SERVER=http://discovery-server/eureka
+      -DSPRING_DATASOURCE_URL=jdbc:mysql://my_db:3307/fintechapp?serverTimezone=UTC
+      -DDB_HOST=my_db
+      -DSPRING_DATASOURCE_USERNAME=test
+      -DSPRING_DATASOURCE_PASSWORD=1007
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -7,9 +16,9 @@ services:
       - 15672:15672 
       - 5672:5672 
       - 5671:5671
-    # networks:
-    #   - dev
-  mydb:
+    networks:
+      - test
+  my_db:
     image: mysql:5.7
     restart: always
     environment:
@@ -25,10 +34,12 @@ services:
       - 3307:3306
     volumes:
       - my-db:/var/lib/mysql
-    # networks:
-    #   - dev
 
-  config-server:
+    networks:
+      - test
+  
+
+  config:
     container_name: config-server
     build:
       context: ./config-server
@@ -36,12 +47,13 @@ services:
     restart: unless-stopped
     ports:
       - 9600:9600
-    depends_on:
-      - rabbitmq
-    # networks:
-    #   - dev
+    # depends_on:
+    #   - rabbitmq
 
-  discovery-server:
+    networks:
+      - test
+
+  discovery:
     container_name: discovery-server
     build:
       context: ./discovery-server
@@ -49,13 +61,19 @@ services:
     restart: unless-stopped
     ports:
       - 8761:8761
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
     depends_on:
       - rabbitmq
-      - config-server
-    # networks:
-    #   - dev
+      # - config
 
-  gateway-server:
+    networks:
+      - test
+
+  gateway:
     container_name: gateway-server
     build:
       context: ./gateway-service
@@ -63,15 +81,17 @@ services:
     restart: unless-stopped
     ports:
       - 8765:8765
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
     depends_on:
-      - rabbitmq
-      - config-server
-      - discovery-server
-      
-    # networks:
-    #   - dev
+      - discovery 
+    networks:
+      - test
 
-  account-server:
+  account:
     container_name: account-server
     build:
       context: ./account-service
@@ -79,15 +99,58 @@ services:
     restart: unless-stopped
     ports:
       - 9800:9800
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
     depends_on:
-      - rabbitmq
-      - config-server
-      - discovery-server
-      - mydb
-    # networks:
-    #   - dev
+      - discovery
+      - my_db
+    networks:
+      - test
+
+  transaction:
+    container_name: transaction-server
+    build:
+      context: ./transaction-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9500:9500
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
+    depends_on:
+      - discovery
+      - my_db
+    networks:
+      - test
+  
+  notification:
+    container_name: notification-server
+    build:
+      context: ./notification-service
+      dockerfile: dockerfile
+    restart: unless-stopped
+    ports:
+      - 9400:9400
+    environment:
+      - JAVA_OPTS=
+        -DEUREKA_SERVER=http://discovery/eureka
+        -DCONFIG_SERVER=http://config
+      - EUREKA_SERVER:http://discovery/eureka
+    depends_on:
+      - discovery
+      - my_db
+    networks:
+      - test
 
 volumes:
   my-db:
-# networks:
-#   dev:
+
+networks:
+  test:
+    driver: bridge

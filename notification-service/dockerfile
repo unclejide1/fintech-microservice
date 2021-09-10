@@ -1,4 +1,16 @@
-FROM openjdk:13-jdk-alpine
-VOLUME /tmp
-COPY target/notification-service-0.0.1-SNAPSHOT.jar NotificationService.jar
-ENTRYPOINT ["java","-jar","NotificationService.jar"]
+#FROM openjdk:13-jdk-alpine
+#VOLUME /tmp
+#COPY target/notification-service-0.0.1-SNAPSHOT.jar NotificationService.jar
+#ENTRYPOINT ["java","-jar","NotificationService.jar"]
+
+FROM fintech/notificationserver-builder:latest AS MAVEN_BUILD
+
+COPY pom.xml /build/
+
+WORKDIR /build/
+
+COPY src /build/src/
+
+ENV JAVA_OPTS=""
+
+ENTRYPOINT mvn spring-boot:run -Dspring-boot.run.profiles=development

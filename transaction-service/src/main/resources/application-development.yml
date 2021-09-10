@@ -7,31 +7,31 @@ eureka:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka
+      defaultZone: ${EUREKA_SERVER:http://discovery:8761/eureka}
 
 spring:
   datasource:
     # Connection url for the database "fintech"
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:localhost}:3307/fintechapp?createDatabaseIfNotExist=true&userSSL=false&serverTimezone=UTC}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:3.138.86.17}:3306/fintechapp?createDatabaseIfNotExist=true&userSSL=false&serverTimezone=UTC}
     # Username and secret
-    username: ${SPRING_DATASOURCE_USERNAME:root}
+    username: ${SPRING_DATASOURCE_USERNAME:ofor}
     password: ${SPRING_DATASOURCE_PASSWORD:1007}
     initialization-mode: always
     dbcp2:
       # Keep the connection alive if idle for a long time (needed in production)
       test-while-idle: true
       validation-query: SELECT 1
-    jpa:
+  jpa:
       # Use spring.jpa.properties.* for Hibernate native properties (the prefix is
       # stripped before adding them to the entity manager).
 
       # Show or not log for each sql query for debugging purposes. NB make sure to turn this off in production to avoid leaking some information
-      hibernate:
+    hibernate:
         # Hibernate ddl auto (create, create-drop, update): with "update" the database
         # schema will be automatically updated accordingly to java entities found in
         # the project
-        ddl-auto: update
-      show-sql: true
+      ddl-auto: update
+    show-sql: true
   application:
     name: transaction-service
   rabbitmq:
