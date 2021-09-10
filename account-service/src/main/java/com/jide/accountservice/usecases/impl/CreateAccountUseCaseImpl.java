@@ -8,12 +8,14 @@ import com.jide.accountservice.domain.entities.FintechAccountEntity;
 import com.jide.accountservice.domain.entities.User;
 import com.jide.accountservice.domain.enums.AccountOpeningStageConstant;
 import com.jide.accountservice.domain.enums.AccountTypeConstant;
+import com.jide.accountservice.infrastructure.configurations.NotificationFeignClient;
 import com.jide.accountservice.infrastructure.exceptions.CustomException;
 import com.jide.accountservice.usecases.CreateAccountUseCase;
 import com.jide.accountservice.usecases.auth.impl.SignUpUseCaseImpl;
 import com.jide.accountservice.usecases.dto.request.CreateAccountRequest;
 import com.jide.accountservice.usecases.dto.request.MicroserviceRequest;
 import com.jide.accountservice.usecases.dto.response.AccountCreationResponse;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -33,6 +35,7 @@ public class CreateAccountUseCaseImpl implements CreateAccountUseCase {
 
     private final UserDao userDao;
     private FintechAccountEntityDao fintechAccountEntityDao;
+    private final NotificationFeignClient notificationFeignClient;
     private final RestTemplate restTemplate;
 
 
@@ -63,23 +66,19 @@ public class CreateAccountUseCaseImpl implements CreateAccountUseCase {
                 .username(user.getEmail())
                 .type("ACCOUNT-OPEN")
                 .build();
-        String payload = new Gson().toJson(microserviceRequest);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<String> entity = new HttpEntity<>(payload, headers);
-        ResponseEntity<String> response = null;
+        String response = "";
 
+
+        logger.info("about to call notification service to notify on successful funding");
         try {
-            response= restTemplate.postForEntity("http://notification-service/api/v1/notify/send/", entity, String.class);
-        } catch (Exception e) {
-//            e.printStackTrace();
-            System.out.println(e.getMessage());
-//            responseBody = handleException(e);
+            response = notificationFeignClient.notify(microserviceRequest);
+        }catch (FeignException.FeignClientException e){
+            logger.error(e.getMessage());
         }
+        logger.info("called notification service with response "+ response);
 
-        String responseEntityBody = response.getBody();
-        logger.info("response>>>>" + responseEntityBody);
+
         logger.info("user>>>" + fintechAccountEntityNew.toString());
         System.out.println(fintechAccountEntity.toString());
 
