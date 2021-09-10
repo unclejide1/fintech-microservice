@@ -40,3 +40,7 @@ To start the application run the following commands
 
 - Transaction-Service: http://localhost:8765/transaction/swagger-ui.html
 
+
+## Postman Collection for Demo
+- https://www.getpostman.com/collections/7d6ba2a08d85560bc5c1
+
