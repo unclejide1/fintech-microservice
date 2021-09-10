@@ -11,11 +11,13 @@ import com.jide.notificationservice.usecases.model.Mail;
 
 import com.jide.notificationservice.usecases.model.MicroserviceRequest;
 import com.jide.notificationservice.usecases.utils.EmailSender;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class NotificationUseCaseImpl implements NotificationUseCase {
 
 
@@ -146,6 +148,7 @@ public class NotificationUseCaseImpl implements NotificationUseCase {
 
 
             }
+            log.info("messsage>>>>>>>" + message);
             newMail.setText(message);
             emailSender.sendEmail(request.getUsername(), newMail.getSubject(), newMail.getText());
             response = "sent";

@@ -29,7 +29,14 @@ To start the application run the following commands
 ### Notification service
 - make build-notify
 
-#### Start all the services
+## Start all the services
 
 - make ddev
+
+
+## Swagger url's
+
+- Account-service: http://localhost:8765/accounts/swagger-ui.html
+
+- Transaction-Service: http://localhost:8765/transaction/swagger-ui.html
 

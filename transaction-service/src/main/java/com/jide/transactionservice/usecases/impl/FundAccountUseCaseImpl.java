@@ -43,16 +43,17 @@ public class FundAccountUseCaseImpl implements FundAccountUseCase {
     @Override
     public AccountFundingResponse fundAccount(AccountFundingRequest request, String userEmail) {
         //TODO
-        //1. check if the user has been verified.
-        //2. get the user and figure out if the account belongs to him.
-        //4. generate transaction reference.
-        //5. get account and update account balance.
-        //6. create a transactionEntity for this transaction.
-        //7. notify user on successful transaction.
+        // 1. check if the user has been verified.
+        // 2. get the user and figure out if the account belongs to him.
+        // 4. generate transaction reference.
+        // 5. get account and update account balance.
+        // 6. create a transactionEntity for this transaction.
+        // 7. notify user on successful transaction.
         User user = userDao.findUserByEmail(userEmail).orElseThrow(() ->  new CustomException("Error: User is not found.", HttpStatus.NOT_FOUND));
         if(!user.getStatus().name().equalsIgnoreCase(AccountOpeningStageConstant.VERIFIED.name())){
             throw new CustomException("Please verify your profile " , HttpStatus.BAD_REQUEST);
         }
+
         FintechAccountEntity userAccountEntity = fintechAccountEntityDao.findAccountByAccountId(request.getAccountNo())
                 .orElseThrow(() ->  new CustomException("Error: Account is not found.", HttpStatus.NOT_FOUND));
 
@@ -63,8 +64,6 @@ public class FundAccountUseCaseImpl implements FundAccountUseCase {
         BigDecimal oldBalance = userAccountEntity.getAvailableBalance();
         userAccountEntity.setAvailableBalance(userAccountEntity.getAvailableBalance().add(request.getAmount()));
         FintechAccountEntity updatedUserAccount =fintechAccountEntityDao.saveRecord(userAccountEntity);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDateTime now = LocalDateTime.now();
 
         AccountFundingTransactionEntity accountFundingTransactionEntity = AccountFundingTransactionEntity.builder()
                 .bankAccount(updatedUserAccount)
